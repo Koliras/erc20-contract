@@ -8,6 +8,7 @@ import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract GooseToken is ERC20 {
     mapping(address => bool) private admins;
+    mapping(address => bool) private blacklist;
 
     constructor(uint256 initialSupply) ERC20("Goose", "GOS") {
         _mint(msg.sender, initialSupply);
@@ -19,12 +20,26 @@ contract GooseToken is ERC20 {
         _;
     }
 
+    modifier notInBlacklist(address user) {
+        require(!blacklist[user], "Users in blacklist are banned");
+        _;
+    }
+
     function addAdmin(address newAdmin) public isAdmin {
         admins[newAdmin] = true;
     }
 
     function removeAdmin(address admin) public isAdmin {
         admins[admin] = false;
+    }
+
+    function addToBlacklist(address user) public isAdmin {
+        require(!admins[user], "Cannot add admin to blacklist");
+        blacklist[user] = true;
+    }
+
+    function removeFromBlacklist(address user) public isAdmin {
+        blacklist[user] = false;
     }
 
     function mint(uint256 additionalSupply) public isAdmin {
@@ -37,5 +52,20 @@ contract GooseToken is ERC20 {
             revert ERC20InsufficientBalance(msg.sender, balance, supplyToBurn);
 
         _burn(msg.sender, supplyToBurn);
+    }
+
+    function _update(
+        address from,
+        address to,
+        uint256 amount
+    )
+        internal
+        virtual
+        override
+        notInBlacklist(from)
+        notInBlacklist(to)
+        notInBlacklist(msg.sender)
+    {
+        super._update(from, to, amount);
     }
 }

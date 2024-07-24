@@ -15,7 +15,7 @@ contract GooseToken is ERC20 {
     }
 
     modifier isAdmin() {
-        require(admins[msg.sender]);
+        require(admins[msg.sender], "Not admin");
         _;
     }
 
@@ -25,5 +25,17 @@ contract GooseToken is ERC20 {
 
     function removeAdmin(address admin) public isAdmin {
         admins[admin] = false;
+    }
+
+    function mint(uint256 additionalSupply) public isAdmin {
+        _mint(msg.sender, additionalSupply);
+    }
+
+    function burn(uint256 supplyToBurn) public isAdmin {
+        uint256 balance = balanceOf(msg.sender);
+        if (balance < supplyToBurn)
+            revert ERC20InsufficientBalance(msg.sender, balance, supplyToBurn);
+
+        _burn(msg.sender, supplyToBurn);
     }
 }

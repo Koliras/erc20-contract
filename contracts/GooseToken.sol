@@ -25,7 +25,9 @@ contract GooseToken is ERC20 {
         _;
     }
 
-    function addAdmin(address newAdmin) public onlyAdmin {
+    function addAdmin(
+        address newAdmin
+    ) public onlyAdmin notInBlacklist(newAdmin) {
         admins[newAdmin] = true;
     }
 

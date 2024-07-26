@@ -47,10 +47,6 @@ contract GooseToken is ERC20 {
     }
 
     function burn(uint256 supplyToBurn) public onlyAdmin {
-        uint256 balance = balanceOf(msg.sender);
-        if (balance < supplyToBurn)
-            revert ERC20InsufficientBalance(msg.sender, balance, supplyToBurn);
-
         _burn(msg.sender, supplyToBurn);
     }
 

@@ -16,7 +16,7 @@ contract GooseToken is ERC20 {
     }
 
     modifier onlyAdmin() {
-        require(admins[msg.sender], "Not admin");
+        require(admins[msg.sender], "Only admins have rights for this action");
         _;
     }
 

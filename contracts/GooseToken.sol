@@ -15,7 +15,7 @@ contract GooseToken is ERC20 {
         admins[msg.sender] = true;
     }
 
-    modifier isAdmin() {
+    modifier onlyAdmin() {
         require(admins[msg.sender], "Not admin");
         _;
     }
@@ -25,28 +25,28 @@ contract GooseToken is ERC20 {
         _;
     }
 
-    function addAdmin(address newAdmin) public isAdmin {
+    function addAdmin(address newAdmin) public onlyAdmin {
         admins[newAdmin] = true;
     }
 
-    function removeAdmin(address admin) public isAdmin {
+    function removeAdmin(address admin) public onlyAdmin {
         admins[admin] = false;
     }
 
-    function addToBlacklist(address user) public isAdmin {
+    function addToBlacklist(address user) public onlyAdmin {
         require(!admins[user], "Cannot add admin to blacklist");
         blacklist[user] = true;
     }
 
-    function removeFromBlacklist(address user) public isAdmin {
+    function removeFromBlacklist(address user) public onlyAdmin {
         blacklist[user] = false;
     }
 
-    function mint(uint256 additionalSupply) public isAdmin {
+    function mint(uint256 additionalSupply) public onlyAdmin {
         _mint(msg.sender, additionalSupply);
     }
 
-    function burn(uint256 supplyToBurn) public isAdmin {
+    function burn(uint256 supplyToBurn) public onlyAdmin {
         uint256 balance = balanceOf(msg.sender);
         if (balance < supplyToBurn)
             revert ERC20InsufficientBalance(msg.sender, balance, supplyToBurn);

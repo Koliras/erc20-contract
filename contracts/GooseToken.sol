@@ -10,9 +10,15 @@ contract GooseToken is ERC20 {
     mapping(address => bool) private admins;
     mapping(address => bool) private blacklist;
 
-    constructor(uint256 initialSupply) ERC20("Goose", "GOS") {
+    constructor(
+        uint256 initialSupply,
+        address[] memory additionalAdmins
+    ) ERC20("Goose", "GOS") {
         _mint(msg.sender, initialSupply);
         admins[msg.sender] = true;
+        for (uint256 i = 0; i < additionalAdmins.length; i++) {
+            admins[additionalAdmins[i]] = true;
+        }
     }
 
     modifier onlyAdmin() {

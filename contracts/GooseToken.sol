@@ -16,7 +16,7 @@ contract GooseToken is ERC20 {
     ) ERC20("Goose", "GOS") {
         _mint(msg.sender, initialSupply);
         admins[msg.sender] = true;
-        for (uint256 i = 0; i < additionalAdmins.length; i++) {
+        for (uint256 i; i < additionalAdmins.length; i++) {
             admins[additionalAdmins[i]] = true;
         }
     }

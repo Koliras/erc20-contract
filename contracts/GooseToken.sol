@@ -34,19 +34,32 @@ contract GooseToken is ERC20 {
     function addAdmin(
         address newAdmin
     ) public onlyAdmin notInBlacklist(newAdmin) {
+        require(!admins[newAdmin], "Cannot add admin to admin list");
         admins[newAdmin] = true;
     }
 
     function removeAdmin(address admin) public onlyAdmin {
+        require(
+            admins[admin],
+            "Cannot remove user from admins if the user is not the admin"
+        );
         admins[admin] = false;
     }
 
     function addToBlacklist(address user) public onlyAdmin {
         require(!admins[user], "Cannot add admin to blacklist");
+        require(
+            !blacklist[user],
+            "Cannot add user to blacklist if the user is already there"
+        );
         blacklist[user] = true;
     }
 
     function removeFromBlacklist(address user) public onlyAdmin {
+        require(
+            !blacklist[user],
+            "Cannot remove user from blacklist that is not in there"
+        );
         blacklist[user] = false;
     }
 

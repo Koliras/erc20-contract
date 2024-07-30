@@ -50,12 +50,23 @@ contract GooseToken is ERC20 {
         blacklist[user] = false;
     }
 
-    function mint(uint256 additionalSupply) public onlyAdmin {
-        _mint(msg.sender, additionalSupply);
+    function mint(
+        address to,
+        uint256 additionalSupply
+    ) public onlyAdmin notInBlacklist(to) {
+        _mint(to, additionalSupply);
     }
 
     function burn(uint256 supplyToBurn) public onlyAdmin {
         _burn(msg.sender, supplyToBurn);
+    }
+
+    function burnFrom(
+        address from,
+        uint256 supplyToBurn
+    ) public onlyAdmin notInBlacklist(from) {
+        _spendAllowance(from, msg.sender, supplyToBurn);
+        _burn(from, supplyToBurn);
     }
 
     function _update(

@@ -66,7 +66,7 @@ contract GooseToken is ERC20 {
 
     function removeFromBlacklist(address user) public onlyAdmin {
         require(
-            !blacklist[user],
+            blacklist[user],
             "Cannot remove user from blacklist that is not in there"
         );
         emit RemovedFromBlacklist(user);

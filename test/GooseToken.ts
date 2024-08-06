@@ -2,7 +2,7 @@ import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import { expect } from "chai";
 import hre from "hardhat";
 
-describe("Lock", function () {
+describe("GooseToken", function () {
   async function deployToken() {
     const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
     const initialSupply = 10000000;
